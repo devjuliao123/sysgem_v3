@@ -23,18 +23,21 @@ def create_app(db_instance=None):
         db = db_instance
     else:
         # Database Configuration
-        # Defaults to local dev environment, but encourages environment variables
+        db_password = os.getenv("DB_PASSWORD")
+
         DB_CONFIG = {
             "host": os.getenv("DB_HOST", "localhost"),
             "port": os.getenv("DB_PORT", "5432"),
             "user": os.getenv("DB_USER", "postgres"),
-            "password": os.getenv("DB_PASSWORD", ""), # User should set this in env
+            "password": db_password if db_password is not None else "",
             "database": os.getenv("DB_NAME", "db_gem")
         }
 
-        # Simple check to alert user if password is empty on non-default setups
-        if not DB_CONFIG["password"] and os.getenv("DB_PASSWORD") is None:
-             logging.warning("DATABASE PASSWORD NOT SET. Use DB_PASSWORD environment variable.")
+        if db_password is None:
+             logging.warning("!!!" + "="*50)
+             logging.warning("AVISO: A variável DB_PASSWORD não está definida no seu ambiente ou arquivo .env")
+             logging.warning("Se o seu PostgreSQL exige senha, a conexão irá falhar.")
+             logging.warning("!!!" + "="*50)
 
         db = Database(DB_CONFIG)
 
@@ -62,6 +65,28 @@ def create_app(db_instance=None):
     from app.modules.instrutor.instrutor_routes import instrutor_bp
     from app.modules.instrumento.instrumento_routes import instrumento_bp
     from app.modules.aula.aula_routes import aula_bp
+
+    # Global schema validation for all operational routes
+    @app.before_request
+    def global_validate_schema():
+        from flask import request, abort, current_app, g
+        import re
+
+        # Check if the request is for an operational route (starting with /app/)
+        if request.path.startswith('/app/'):
+            parts = request.path.split('/')
+            if len(parts) > 2:
+                schema = parts[2]
+                # Security: Strict schema name validation
+                if not re.match(r'^org_\d{4}$', schema):
+                    abort(400, "Schema inválido")
+
+                # Check if organization exists
+                org_service = current_app.config['ORG_SERVICE']
+                if not org_service.schema_exists(schema):
+                    abort(404, "Organização não encontrada")
+
+                g.schema = schema
 
     app.register_blueprint(admin_org_bp)
     app.register_blueprint(gem_main_bp)

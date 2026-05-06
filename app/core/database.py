@@ -84,7 +84,9 @@ class Database:
         if schema:
             cur = conn.cursor()
             # search_path is used to point to the correct tenant schema
-            cur.execute(f"SET search_path TO {schema}, public")
+            # We use psycopg2's quote_ident or set_config for safety
+            from psycopg2 import sql
+            cur.execute(sql.SQL("SET search_path TO {}, public").format(sql.Identifier(schema)))
             cur.close()
         return conn
 

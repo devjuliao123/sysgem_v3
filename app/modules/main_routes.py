@@ -7,18 +7,6 @@ gem_main_bp = Blueprint('gem_main', __name__, url_prefix='/app/<schema>')
 def pull_schema(endpoint, values):
     g.schema = values.pop('schema', None)
 
-@gem_main_bp.before_request
-def validate_schema():
-    if not g.schema:
-        abort(404)
-
-    # Security: Strict schema name validation
-    if not re.match(r'^org_\d{4}$', g.schema):
-        abort(400, "Schema inválido")
-
-    org_service = current_app.config['ORG_SERVICE']
-    if not org_service.schema_exists(g.schema):
-        abort(404, "Organização não encontrada")
 
 @gem_main_bp.route('/inicio')
 def inicio():

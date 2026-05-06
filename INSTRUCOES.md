@@ -11,26 +11,37 @@ Este projeto unifica o sistema administrativo e operacional em uma única aplica
 
 1. Instale as dependências:
    ```bash
-   pip install flask psycopg2-binary
+   pip install flask psycopg2-binary python-dotenv
    ```
 
 2. Configure as variáveis de ambiente:
-   - Copie o arquivo `.env.example` para `.env`
-   - Edite o `.env` com suas credenciais do PostgreSQL (principalmente `DB_PASSWORD`)
+   - No diretório raiz do projeto, crie um arquivo chamado `.env` (você pode copiar o `.env.example`).
+   - Edite o `.env` e preencha a sua senha do PostgreSQL:
+     ```env
+     DB_PASSWORD=sua_senha_aqui
+     ```
 
-## Como Rodar
+## Como Rodar no Windows
 
-Execute o arquivo principal:
-```bash
-python run.py
-```
+1. Abra o Terminal ou PowerShell na pasta do projeto.
+2. Execute o comando:
+   ```bash
+   python run.py
+   ```
 
-- **Admin (Gestão de Igrejas/Schemas):** [http://127.0.0.1:5000/admin](http://127.0.0.1:5000/admin)
-- **App (Operacional):** Após criar uma organização no Admin, clique em "Acessar" para entrar no sistema do usuário.
+## Acesso ao Sistema
 
-## Solução de Problemas
+- **Admin (Gestão de Igrejas):** [http://127.0.0.1:5000/admin](http://127.0.0.1:5000/admin)
+- **App (Operacional):** Após criar uma igreja no Admin, clique no botão **"Acessar"**.
 
-### Erro: `fe_sendauth: no password supplied` ou `Connection refused`
-Isso significa que o Flask não conseguiu conectar ao seu PostgreSQL.
-1. Certifique-se que o PostgreSQL está ativo.
-2. Certifique-se que você definiu a senha correta no arquivo `.env` ou como variável de ambiente `DB_PASSWORD`.
+## Solução de Problemas de Conexão
+
+Se você vir o erro `psycopg2.OperationalError: ... fe_sendauth: no password supplied`:
+
+1. **Arquivo .env:** Verifique se o arquivo se chama exatamente `.env` (sem .txt no final) e se está na mesma pasta que o `run.py`.
+2. **Senha:** Certifique-se que a senha no `.env` é a mesma do seu usuário `postgres`.
+3. **Variáveis de Sistema:** Alternativamente, você pode definir a senha diretamente no terminal antes de rodar (Windows PowerShell):
+   ```powershell
+   $env:DB_PASSWORD="sua_senha_aqui"
+   python run.py
+   ```
