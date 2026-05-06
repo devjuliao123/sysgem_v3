@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold mb-1">Instrumentos</h2>
+            <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#collapseForm">Novo Instrumento</button>
+        </div>
+        <div class="collapse mb-4" id="collapseForm">
+            <div class="card border-0 shadow-sm p-4">
+                <form action="{{ url_for('instrumentos.create_instrumento', schema=schema) }}" method="POST" class="row g-3">
+                    {% for col in columns %}
+                        {% if col.column_name != 'id' %}
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-muted">{{ col.column_name.replace('_', ' ').upper() }}</label>
+                            {% if col.data_type == 'boolean' %}
+                                <select class="form-select" name="{{ col.column_name }}">
+                                    <option value="true">SIM</option>
+                                    <option value="false">NÃO</option>
+                                </select>
+                            {% else %}
+                                <input type="text" class="form-control" name="{{ col.column_name }}" placeholder="DIGITE {{ col.column_name.upper() }}">
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                    <div class="col-md-12 text-end"><button type="submit" class="btn btn-primary">SALVAR</button></div>
+                </form>
+            </div>
+        </div>
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <table class="table table-hover mb-0">
+                <thead class="bg-light"><tr><th class="px-4">ID</th><th>NOME</th><th class="text-end px-4">AÇÕES</th></tr></thead>
+                <tbody>
+                    {% for inst in instrumentos %}
+                    <tr>
+                        <td class="px-4">#{{ inst.id }}</td>
+                        <td class="fw-bold">{{ inst.nome }}</td>
+                        <td class="text-end px-4">
+                            <form action="{{ url_for('instrumentos.delete_instrumento', schema=schema, id=inst.id) }}" method="POST">
+                                <button type="submit" class="btn btn-outline-danger btn-sm border-0"><i class="bi bi-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

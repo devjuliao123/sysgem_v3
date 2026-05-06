@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">Alunos</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{{ url_for('gem_main.inicio', schema=schema) }}">Início</a></li>
+                        <li class="breadcrumb-item active">Alunos</li>
+                    </ol>
+                </nav>
+            </div>
+            <button class="btn btn-primary d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseForm">
+                <i class="bi bi-person-plus me-2"></i> Novo Aluno
+            </button>
+        </div>
+
+        <!-- Collapsible Form -->
+        <div class="collapse mb-4" id="collapseForm">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Informações do Aluno</h5>
+                    <form action="{{ url_for('alunos.create_aluno', schema=schema) }}" method="POST" class="row g-3">
+
+                        {% for col in columns %}
+                            {% if col.column_name != 'id' and col.column_name != 'data_cadastro' %}
+                            <div class="col-md-4">
+                                <label for="{{ col.column_name }}" class="form-label small fw-bold text-muted">{{ col.column_name.replace('_', ' ').upper() }}</label>
+
+                                {% if col.column_name == 'instrumento_id' %}
+                                    <select class="form-select" id="{{ col.column_name }}" name="{{ col.column_name }}" {% if col.is_nullable == 'NO' %}required{% endif %}>
+                                        <option value="" selected disabled>SELECIONE...</option>
+                                        {% for inst in instrumentos %}
+                                        <option value="{{ inst.id }}">{{ inst.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% elif col.column_name == 'instrutor_id' %}
+                                    <select class="form-select" id="{{ col.column_name }}" name="{{ col.column_name }}" {% if col.is_nullable == 'NO' %}required{% endif %}>
+                                        <option value="" selected disabled>SELECIONE...</option>
+                                        {% for instr in instrutores %}
+                                        <option value="{{ instr.id }}">{{ instr.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% elif col.data_type == 'boolean' %}
+                                    <select class="form-select" id="{{ col.column_name }}" name="{{ col.column_name }}">
+                                        <option value="true">SIM</option>
+                                        <option value="false">NÃO</option>
+                                    </select>
+                                {% elif col.data_type == 'date' %}
+                                    <input type="date" class="form-control" id="{{ col.column_name }}" name="{{ col.column_name }}" {% if col.is_nullable == 'NO' %}required{% endif %}>
+                                {% elif col.data_type == 'integer' %}
+                                    <input type="number" class="form-control" id="{{ col.column_name }}" name="{{ col.column_name }}" {% if col.is_nullable == 'NO' %}required{% endif %}>
+                                {% else %}
+                                    <input type="text" class="form-control" id="{{ col.column_name }}" name="{{ col.column_name }}" {% if col.is_nullable == 'NO' %}required{% endif %} placeholder="DIGITE {{ col.column_name.replace('_', ' ').upper() }}">
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+
+                        <div class="col-md-12 d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary px-5">SALVAR ALUNO</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="px-4 py-3 text-muted">ID</th>
+                                <th class="py-3">NOME DO ALUNO</th>
+                                <th class="py-3">INSTRUMENTO</th>
+                                <th class="py-3">INSTRUTOR</th>
+                                <th class="px-4 py-3 text-end">AÇÕES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for aluno in alunos %}
+                            <tr>
+                                <td class="px-4 text-muted small">#{{ aluno.id }}</td>
+                                <td class="fw-bold">{{ aluno.nome }}</td>
+                                <td><span class="badge bg-primary text-white">{{ aluno.instrumento_nome }}</span></td>
+                                <td class="text-muted">{{ aluno.instrutor_nome }}</td>
+                                <td class="px-4 text-end">
+                                    <form action="{{ url_for('alunos.delete_aluno', schema=schema, id=aluno.id) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm border-0" onclick="return confirm('DESEJA REALMENTE EXCLUIR ESTE ALUNO?')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox fs-1 d-block mb-2 opacity-25"></i>
+                                    Nenhum aluno cadastrado.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
