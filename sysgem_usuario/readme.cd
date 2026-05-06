@@ -1,0 +1,122 @@
+Você é um engenheiro de software sênior especializado em Flask, arquitetura de sistemas e desenvolvimento de interfaces modernas.
+
+Preciso que você crie o ALICERCE de um sistema web chamado:
+
+SYSGEM
+
+Este sistema será utilizado para gestão de um GEM (Grupo de Estudos Musicais), utilizado por igrejas para organização de alunos, instrutores e aulas.
+
+IMPORTANTE:
+- NESTA FASE NÃO DEVE HAVER QUALQUER INTEGRAÇÃO COM BANCO DE DADOS
+- O SISTEMA DEVE SER TOTALMENTE FUNCIONAL APENAS COM DADOS EM MEMÓRIA OU MOCKADOS
+- A ROTA PRINCIPAL DO SISTEMA DEVE SER OBRIGATORIAMENTE: /inicio
+- NÃO UTILIZAR ROTAS PADRÃO COMO / OU /dashboard COMO PRINCIPAL
+
+---
+
+OBJETIVO
+
+Criar a BASE COMPLETA do sistema, com foco em estrutura, organização de código e interface.
+
+---
+
+REQUISITOS DO FRONTEND (OBRIGATÓRIOS)
+
+- TODAS AS LETRAS DIGITADAS PELO USUÁRIO DEVEM SER AUTOMATICAMENTE CONVERTIDAS PARA MAIÚSCULO
+- Cor predominante: BRANCO
+- Cor secundária: AZUL
+- Interface moderna, limpa e rápida
+- UX simples e objetiva
+
+---
+
+FUNCIONALIDADES INICIAIS (SEM BANCO)
+
+Criar telas e fluxos para:
+
+1. Cadastro de Alunos
+2. Cadastro de Instrutores
+3. Cadastro de Instrumentos
+4. Cadastro de Aulas
+
+Os dados devem ser armazenados em memória (listas/dicionários).
+
+---
+
+BACKEND (FLASK)
+
+Criar estrutura profissional:
+
+/app
+  /routes
+  /services
+  /models (mesmo sem banco, usar classes)
+  /utils
+/templates
+/static
+
+- Separar responsabilidades
+- Criar APIs REST:
+  - GET (listar)
+  - POST (criar)
+  - DELETE (remover)
+
+- Criar camada de serviço para regras de negócio
+- Criar validações básicas
+
+---
+
+FRONTEND
+
+- Usar HTML + Bootstrap 5
+- Criar páginas para:
+  - Início (/inicio)
+  - Alunos
+  - Instrutores
+  - Instrumentos
+  - Aulas
+
+- Criar formulários funcionais
+- Criar tabelas (grid) para listagem
+- Criar botões de ação:
+  - adicionar
+  - excluir
+
+- Aplicar automaticamente UPPERCASE em TODOS os inputs do usuário
+
+---
+
+REGRAS DE NEGÓCIO
+
+- Aluno deve selecionar um instrumento
+- Aluno deve selecionar um instrutor
+- Aula deve conter:
+  - aluno
+  - instrutor
+  - instrumento
+  - data
+  - observação
+
+---
+
+EXTRA (IMPORTANTE)
+
+- Código limpo e organizado
+- Preparado para futura integração com banco de dados
+- Fácil manutenção e escalabilidade
+- Evitar código monolítico
+
+---
+
+ENTREGA
+
+- Estrutura completa de pastas
+- Código do Flask
+- Templates HTML
+- CSS (com cores branco + azul)
+- JS para interações (inclusive UPPERCASE automático)
+- Explicação breve de como rodar o projeto
+
+---
+
+Seja direto, técnico e focado em criar um ALICERCE PROFISSIONAL para evolução futura.

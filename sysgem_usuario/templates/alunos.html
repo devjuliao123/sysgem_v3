@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">Alunos</h2>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="{{ url_for('main.inicio') }}">Início</a></li>
+                        <li class="breadcrumb-item active">Alunos</li>
+                    </ol>
+                </nav>
+            </div>
+            <button class="btn btn-primary d-flex align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#collapseForm">
+                <i class="bi bi-person-plus me-2"></i> Novo Aluno
+            </button>
+        </div>
+
+        <!-- Collapsible Form -->
+        <div class="collapse mb-4" id="collapseForm">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Informações do Aluno</h5>
+                    <form action="{{ url_for('alunos.create_aluno') }}" method="POST" class="row g-3">
+                        <div class="col-md-5">
+                            <label for="nome" class="form-label small fw-bold text-muted">NOME COMPLETO</label>
+                            <input type="text" class="form-control" id="nome" name="nome" required placeholder="DIGITE O NOME COMPLETO">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="instrumento_id" class="form-label small fw-bold text-muted">INSTRUMENTO</label>
+                            <select class="form-select" id="instrumento_id" name="instrumento_id" required>
+                                <option value="" selected disabled>SELECIONE...</option>
+                                {% for inst in instrumentos %}
+                                <option value="{{ inst.id }}">{{ inst.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="instrutor_id" class="form-label small fw-bold text-muted">INSTRUTOR</label>
+                            <select class="form-select" id="instrutor_id" name="instrutor_id" required>
+                                <option value="" selected disabled>SELECIONE...</option>
+                                {% for instr in instrutores %}
+                                <option value="{{ instr.id }}">{{ instr.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-1 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">SALVAR</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="px-4 py-3 text-muted">ID</th>
+                                <th class="py-3">NOME DO ALUNO</th>
+                                <th class="py-3">INSTRUMENTO</th>
+                                <th class="py-3">INSTRUTOR</th>
+                                <th class="px-4 py-3 text-end">AÇÕES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for aluno in alunos %}
+                            <tr>
+                                <td class="px-4 text-muted small">#{{ aluno.id }}</td>
+                                <td class="fw-bold">{{ aluno.nome }}</td>
+                                <td><span class="badge bg-primary text-white" style="font-size: 0.75rem;">{{ aluno.instrumento }}</span></td>
+                                <td class="text-muted">{{ aluno.instrutor }}</td>
+                                <td class="px-4 text-end">
+                                    <form action="{{ url_for('alunos.delete_aluno', id=aluno.id) }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm border-0" onclick="return confirm('DESEJA REALMENTE EXCLUIR ESTE ALUNO?')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="bi bi-inbox fs-1 d-block mb-2 opacity-25"></i>
+                                    Nenhum aluno cadastrado.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

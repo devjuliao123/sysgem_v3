@@ -1,0 +1,197 @@
+:root {
+    --primary-color: #2563eb;
+    --primary-hover: #1d4ed8;
+    --primary-soft: #eff6ff;
+    --bg-body: #f8fafc;
+    --sidebar-width: 260px;
+    --sidebar-collapsed: 80px;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --card-shadow-hover: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+body {
+    background-color: var(--bg-body);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-main);
+    overflow-x: hidden;
+}
+
+/* Navbar Refinement */
+.main-navbar {
+    height: 70px;
+    z-index: 1050;
+}
+
+.brand-logo {
+    font-size: 1.25rem;
+    letter-spacing: -0.5px;
+    transition: transform 0.2s;
+}
+
+.brand-logo:hover {
+    transform: scale(1.02);
+}
+
+/* Wrapper and Sidebar */
+#wrapper {
+    display: flex;
+    width: 100%;
+}
+
+#sidebar-wrapper {
+    min-height: calc(100vh - 70px);
+    width: var(--sidebar-width);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: sticky;
+    top: 70px;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: all 0.2s;
+    border-left: 4px solid transparent;
+    margin: 0.25rem 0.75rem;
+    border-radius: 8px;
+}
+
+.sidebar-link:hover {
+    background-color: var(--primary-soft);
+    color: var(--primary-color);
+}
+
+.sidebar-link.active {
+    background-color: var(--primary-soft);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.link-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 1.15rem;
+}
+
+.ls-1 { letter-spacing: 1px; }
+
+/* Mobile Sidebar Behavior */
+@media (max-width: 767.98px) {
+    #sidebar-wrapper {
+        position: fixed;
+        left: calc(-1 * var(--sidebar-width));
+        top: 0;
+        height: 100vh;
+        z-index: 1100;
+    }
+
+    #wrapper.toggled #sidebar-wrapper {
+        left: 0;
+    }
+
+    #sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(2px);
+        z-index: 1090;
+    }
+
+    #wrapper.toggled #sidebar-overlay {
+        display: block;
+    }
+}
+
+/* Desktop Collapsed state (optional class logic) */
+#wrapper.collapsed #sidebar-wrapper {
+    width: var(--sidebar-collapsed);
+}
+
+#wrapper.collapsed #sidebar-wrapper .link-text,
+#wrapper.collapsed #sidebar-wrapper .text-uppercase {
+    display: none;
+}
+
+/* Cards & Content */
+.card {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.3s;
+}
+
+.hover-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow-hover) !important;
+}
+
+.icon-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-soft);
+    color: var(--primary-color);
+    font-size: 1.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    padding: 0.6rem 1.25rem;
+    font-weight: 500;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.btn-outline-primary {
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+/* Forms & Tables */
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+input, textarea {
+    text-transform: uppercase;
+}
+
+.custom-alert {
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+/* Typography Refinement */
+h1, h2, h3, h4, h5 {
+    color: var(--text-main);
+    letter-spacing: -0.025em;
+}
+
+.text-uppercase-only {
+    text-transform: uppercase;
+}
