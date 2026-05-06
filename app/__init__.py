@@ -23,17 +23,16 @@ def create_app(db_instance=None):
         db = db_instance
     else:
         # Database Configuration
-        db_password = os.getenv("DB_PASSWORD")
-
+        # We retrieve all possible config from env, filtering out None later in Database class
         DB_CONFIG = {
             "host": os.getenv("DB_HOST", "localhost"),
             "port": os.getenv("DB_PORT", "5432"),
             "user": os.getenv("DB_USER", "postgres"),
-            "password": db_password if db_password is not None else "",
+            "password": os.getenv("DB_PASSWORD"),
             "database": os.getenv("DB_NAME", "db_gem")
         }
 
-        if db_password is None:
+        if DB_CONFIG["password"] is None:
              logging.warning("!!!" + "="*50)
              logging.warning("AVISO: A variável DB_PASSWORD não está definida no seu ambiente ou arquivo .env")
              logging.warning("Se o seu PostgreSQL exige senha, a conexão irá falhar.")

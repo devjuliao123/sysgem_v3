@@ -22,11 +22,12 @@ class Database:
             raise e
 
     def _get_connection(self, dbname=None):
-        config = self.config.copy()
+        # Create a copy and remove None values so psycopg2 uses defaults/env
+        config = {k: v for k, v in self.config.items() if v is not None}
+
         if dbname:
             config["database"] = dbname
 
-        # If password is empty and not provided in env, some PG setups fail
         return psycopg2.connect(**config)
 
     def _ensure_db_exists(self):
