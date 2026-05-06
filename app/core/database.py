@@ -2,18 +2,31 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import logging
 import os
+import sys
 
 class Database:
     def __init__(self, db_config):
         self.config = db_config
         self.db_name = db_config.get("database", "db_gem")
-        self._ensure_db_exists()
-        self._run_migrations()
+        try:
+            self._ensure_db_exists()
+            self._run_migrations()
+        except psycopg2.OperationalError as e:
+            logging.error("="*50)
+            logging.error("ERRO DE CONEXÃO COM O BANCO DE DADOS")
+            logging.error(f"Detalhes: {e}")
+            logging.error("Verifique se o PostgreSQL está rodando e se a senha em DB_PASSWORD está correta.")
+            logging.error("="*50)
+            # Do not exit immediately to allow Flask to potentially show error or for testing
+            # but in this case, we'll raise it so the user sees the clear message above
+            raise e
 
     def _get_connection(self, dbname=None):
         config = self.config.copy()
         if dbname:
             config["database"] = dbname
+
+        # If password is empty and not provided in env, some PG setups fail
         return psycopg2.connect(**config)
 
     def _ensure_db_exists(self):

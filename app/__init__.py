@@ -14,7 +14,7 @@ def create_app(db_instance=None):
                 static_folder='../static',
                 template_folder='../templates')
 
-    app.secret_key = os.urandom(24)
+    app.secret_key = os.getenv("SECRET_KEY", os.urandom(24))
 
     # Logging
     logging.basicConfig(level=logging.INFO)
@@ -23,13 +23,19 @@ def create_app(db_instance=None):
         db = db_instance
     else:
         # Database Configuration
+        # Defaults to local dev environment, but encourages environment variables
         DB_CONFIG = {
             "host": os.getenv("DB_HOST", "localhost"),
             "port": os.getenv("DB_PORT", "5432"),
             "user": os.getenv("DB_USER", "postgres"),
-            "password": os.getenv("DB_PASSWORD", ""),
+            "password": os.getenv("DB_PASSWORD", ""), # User should set this in env
             "database": os.getenv("DB_NAME", "db_gem")
         }
+
+        # Simple check to alert user if password is empty on non-default setups
+        if not DB_CONFIG["password"] and os.getenv("DB_PASSWORD") is None:
+             logging.warning("DATABASE PASSWORD NOT SET. Use DB_PASSWORD environment variable.")
+
         db = Database(DB_CONFIG)
 
     # Services
