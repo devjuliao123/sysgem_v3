@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-1">Instrutores</h2>
+            </div>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseForm">
+                <i class="bi bi-person-plus me-2"></i> Novo Instrutor
+            </button>
+        </div>
+
+        <div class="collapse mb-4" id="collapseForm">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <form action="{{ url_for('instrutores.create_instrutor', schema=schema) }}" method="POST" class="row g-3">
+                        {% for col in columns %}
+                            {% if col.column_name != 'id' and col.column_name != 'data_cadastro' %}
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">{{ col.column_name.replace('_', ' ').upper() }}</label>
+                                {% if col.column_name == 'instrumento_id' %}
+                                    <select class="form-select" name="{{ col.column_name }}" required>
+                                        <option value="" selected disabled>SELECIONE...</option>
+                                        {% for inst in instrumentos %}
+                                        <option value="{{ inst.id }}">{{ inst.nome }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% elif col.column_name == 'comum_id' %}
+                                    <select class="form-select" name="{{ col.column_name }}" required>
+                                        <option value="" selected disabled>SELECIONE...</option>
+                                        {% for c in comuns %}
+                                        <option value="{{ c.id }}">{{ c.descricao }}</option>
+                                        {% endfor %}
+                                    </select>
+                                {% elif col.data_type == 'boolean' %}
+                                    <select class="form-select" name="{{ col.column_name }}">
+                                        <option value="true">SIM</option>
+                                        <option value="false">NÃO</option>
+                                    </select>
+                                {% elif col.data_type == 'date' %}
+                                    <input type="date" class="form-control" name="{{ col.column_name }}" required>
+                                {% else %}
+                                    <input type="text" class="form-control" name="{{ col.column_name }}" placeholder="DIGITE {{ col.column_name.upper() }}">
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                        <div class="col-md-12 d-flex justify-content-end mt-4">
+                            <button type="submit" class="btn btn-primary px-5">SALVAR</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm overflow-hidden">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="bg-light">
+                        <tr>
+                            <th class="px-4">ID</th>
+                            <th>NOME</th>
+                            <th>INSTRUMENTO</th>
+                            <th class="text-end px-4">AÇÕES</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for instrutor in instrutores %}
+                        <tr>
+                            <td class="px-4">#{{ instrutor.id }}</td>
+                            <td class="fw-bold">{{ instrutor.nome }}</td>
+                            <td>{{ instrutor.instrumento_nome }}</td>
+                            <td class="text-end px-4">
+                                <form action="{{ url_for('instrutores.delete_instrutor', schema=schema, id=instrutor.id) }}" method="POST">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm border-0"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
